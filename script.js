@@ -9,13 +9,7 @@ function autoPlay() {
 }
 
 window.onload = autoPlay;
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'hi,en,bn,te,mr,ta,gu,ur,kn,ml,pa', 
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
- }, 'google_translate_element');
- }
+
 // const synth = window.speechSynthesis;
 //         function readContent() {
 //             const content = document.body.innerText;  
@@ -64,3 +58,51 @@ function googleTranslateElementInit() {
 
 //     speechSynthesis.speak(utterance);
 // };
+var buttonEnable = true;
+$(document).ready(function () {
+    $(".chatbox").hide()
+    $(".chatbot").on('click', function(){
+        $(".chatbot").hide()
+        $(".chatbox").show()
+    })
+    $(".close_chatbox").on('click', function(){
+        $(".chatbox").hide()
+        $(".chatbot").show()
+    })
+    $(".send").on('click', function(){
+        if(buttonEnable){
+        let query = $('#query').val()
+        if(query == "")
+        {
+            alert("Please ask some question!")
+        }
+        else
+        {
+            buttonEnable = false
+            $('#query').val('')
+            let message = document.createElement('div')
+            message.classList.add('user')
+            message.innerText = query
+            $(".messages").append(message);
+            const data = {"message": query}
+            $.ajax({
+                url: "http://127.0.0.1:5000/chat",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json", // Specify JSON content type
+                success: function (response) {
+                    let message = document.createElement('div')
+                    message.classList.add('bot')
+                    message.innerText = response.response
+                    $(".messages").append(message);
+                    buttonEnable = true
+                },
+                error: function (jqXHR) {
+                    buttonEnable = true
+                    console.error("Error:", jqXHR.responseText);
+                },
+            });
+        }
+        }
+    })
+});
