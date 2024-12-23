@@ -6,7 +6,7 @@ from llama_index.embeddings.gemini import GeminiEmbedding
 import os
 from flask_cors import CORS
 
-api_key = "<API-KEY>"
+api_key = "AIzaSyBgegyMrrulQtce4zjbjFwBqGSb35PPyvk"
 os.environ["GOOGLE_API_KEY"] = api_key
 
 app = Flask(__name__)
